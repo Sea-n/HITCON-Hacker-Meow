@@ -1,0 +1,72 @@
+import logging
+
+from pyrogram import Client, filters
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import CallbackQuery, InputMediaPhoto
+
+log: logging.Logger = logging.getLogger(__name__)
+
+
+@Client.on_message(filters.command("map") & ~filters.forwarded)
+async def map(cli: Client, msg: Message) -> None:
+    keyboard = [[InlineKeyboardButton("13 樓", "map_13F"),
+                 InlineKeyboardButton("14 樓", "map_14F"),
+                 InlineKeyboardButton("15 樓", "map_15F")],
+                [InlineKeyboardButton("/dev/null", "map_nop")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await cli.send_photo(msg.chat.id, "https://i.imgur.com/uQLAd4x.png",
+                         "場地總覽\n你想看哪層樓", reply_markup=reply_markup)
+
+
+@Client.on_callback_query(filters.regex('^map'))
+async def map_callback(cli: Client, callback: CallbackQuery) -> None:
+    media = None
+    reply_markup = None
+    if callback.data == "map":
+        keyboard = [[InlineKeyboardButton("13 樓", "map_13F"),
+                     InlineKeyboardButton("14 樓", "map_14F"),
+                     InlineKeyboardButton("15 樓", "map_15F")],
+                    [InlineKeyboardButton("/dev/null", "map_nop")]]
+
+        media = InputMediaPhoto("https://i.imgur.com/uQLAd4x.png",
+                                "場地總覽\n你想看哪層樓")
+
+    if callback.data == "map_13F":
+        keyboard = [[InlineKeyboardButton("議程（格萊聽）", "agenda_great"),
+                     InlineKeyboardButton("XX 活動（天漾聽）", "event_skyview")],
+                    [InlineKeyboardButton("回樓層圖", "map")]]
+
+        media = InputMediaPhoto("https://i.imgur.com/MqYzHd5.png",
+                                "這是 13 樓的平面圖\n對 XX 議程、XX 活動有興趣嗎")
+
+    elif callback.data == "map_14F":
+        keyboard = [[InlineKeyboardButton("攤位（康定聽）", "booth_kd"),
+                     InlineKeyboardButton("贊助商（艋舺聽）", "booth_bk"),
+                     InlineKeyboardButton("XX 活動（萬大聽）", "event_wd")],
+                    [InlineKeyboardButton("回樓層圖", "map")]]
+
+        media = InputMediaPhoto("https://i.imgur.com/y7UcbyJ.png",
+                                "這是 14 樓的平面圖\n對 XX 攤位、XX 活動有興趣嗎")
+
+    elif callback.data == "map_15F":
+        keyboard = [[InlineKeyboardButton("議程（天悅聽）", "agenda_ty"),
+                     InlineKeyboardButton("議程（天嵐聽）", "agenda_tl"),
+                     InlineKeyboardButton("攤位（天闊聽）", "booth_tk")],
+                    [InlineKeyboardButton("回樓層圖", "map")]]
+
+        media = InputMediaPhoto("https://i.imgur.com/F0YKoOX.png",
+                                "這是 15 樓的平面圖\n對 XX 議程、XX 攤位有興趣嗎")
+
+    elif callback.data == "map_nop":
+        pass
+
+    else:
+        log.debug(f"Unknown callback {callback.data}")
+
+    if media:
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await cli.edit_message_media(callback.from_user.id,
+                                     callback.message.message_id,
+                                     media=media, reply_markup=reply_markup)
+
+    await cli.answer_callback_query(callback.id)
