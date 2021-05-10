@@ -5,9 +5,10 @@ import sys
 from datetime import datetime
 from typing import Optional, Union
 
-
+from irc3 import IrcBot
 from pyrogram import Client
 from pyrogram.errors import ApiIdInvalid, AuthKeyUnregistered
+from pyrogram.methods.utilities.idle import idle
 from pyrogram.session import Session
 from pyrogram.types import User
 
@@ -33,6 +34,18 @@ class Bot:
             system_version=self.system_version
         )
 
+        self.irc: IrcBot = IrcBot.from_config(dict(
+            nick=os.getenv("IRC_NICKNAME"), autojoins=[os.getenv("IRC_CHANNEL")],
+            username=os.getenv("IRC_INFO"),
+            sasl_username=os.getenv("IRC_NICKNAME"), sasl_password=os.getenv("IRC_PASSWORD"),
+            host='chat.freenode.net', port=6667, ssl=False, debug=True,
+            includes=[
+                'irc3.plugins.core',
+                'irc3.plugins.command',
+                'irc3.plugins.logger',
+            ],
+        ))
+
         self.start_time: datetime = datetime.utcnow()
 
     def __new__(cls, *args, **kwargs):
@@ -48,14 +61,24 @@ class Bot:
             "include": [],
             "exclude": []
         }
-        self.app.run()
+
+        self.app.start()
+        self.irc.run(False)
+
+        # TODO: fix exit error
+        idle()
+
+        self.app.stop()
+        self.irc.quit()
 
     async def run_once(self):
         # Disable notice
         Session.notice_displayed = True
         logging.getLogger("pyrogram").setLevel(logging.WARNING)
+
         try:
             await self.app.start()
+
         except AuthKeyUnregistered:
             log.critical("[Oops!] Session expired!")
             log.critical("        Removed old session and exit...!")
@@ -70,10 +93,13 @@ class Bot:
             info_str += f" (@{me.username})" if me.username else ""
             info_str += f" ID: {me.id}"
             log.info(info_str)
+
             self.me: User = me
+
         except ApiIdInvalid:
             log.critical("[Failed] Api ID is invalid")
             sys.exit(1)
+
         except Exception as e:
             log.exception(e)
             sys.exit(1)
