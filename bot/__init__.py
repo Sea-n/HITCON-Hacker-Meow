@@ -40,9 +40,9 @@ class Bot:
             sasl_username=os.getenv("IRC_NICKNAME"), sasl_password=os.getenv("IRC_PASSWORD"),
             host='chat.freenode.net', port=6667, ssl=False, debug=True,
             includes=[
-                'irc3.plugins.core',
                 'irc3.plugins.command',
                 'irc3.plugins.logger',
+                'bot.irc_plugins.irc2tg',
             ],
         ))
 
