@@ -12,7 +12,7 @@ async def map(cli: Client, msg: Message) -> None:
     keyboard = [[InlineKeyboardButton("13 樓", "map_13F"),
                  InlineKeyboardButton("14 樓", "map_14F"),
                  InlineKeyboardButton("15 樓", "map_15F")],
-                [InlineKeyboardButton("/dev/null", "map_nop")]]
+                [InlineKeyboardButton("回主選單", "help")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await cli.send_photo(msg.chat.id, "https://i.imgur.com/uQLAd4x.png",
                          "場地總覽\n你想看哪層樓", reply_markup=reply_markup)
@@ -26,7 +26,7 @@ async def map_callback(cli: Client, callback: CallbackQuery) -> None:
         keyboard = [[InlineKeyboardButton("13 樓", "map_13F"),
                      InlineKeyboardButton("14 樓", "map_14F"),
                      InlineKeyboardButton("15 樓", "map_15F")],
-                    [InlineKeyboardButton("/dev/null", "map_nop")]]
+                    [InlineKeyboardButton("回主選單", "help")]]
 
         media = InputMediaPhoto("https://i.imgur.com/uQLAd4x.png",
                                 "場地總覽\n你想看哪層樓")
@@ -57,16 +57,14 @@ async def map_callback(cli: Client, callback: CallbackQuery) -> None:
         media = InputMediaPhoto("https://i.imgur.com/F0YKoOX.png",
                                 "這是 15 樓的平面圖\n對 XX 議程、XX 攤位有興趣嗎")
 
-    elif callback.data == "map_nop":
-        pass
-
     else:
         log.debug(f"Unknown callback {callback.data}")
+        await cli.answer_callback_query(callback.id, f"尚未實作 {callback.data}")
+        return
 
-    if media:
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await cli.edit_message_media(callback.message.chat.id,
-                                     callback.message.message_id,
-                                     media=media, reply_markup=reply_markup)
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await cli.edit_message_media(callback.message.chat.id,
+                                 callback.message.message_id,
+                                 media=media, reply_markup=reply_markup)
 
     await cli.answer_callback_query(callback.id)

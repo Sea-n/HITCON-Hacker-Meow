@@ -17,7 +17,8 @@ async def agenda(cli: Client, msg: Message) -> None:
                 [InlineKeyboardButton("Day 1 上午", "agenda_1A"),
                  InlineKeyboardButton("Day 1 下午", "agenda_1B"),
                  InlineKeyboardButton("Day 2 上午", "agenda_2A"),
-                 InlineKeyboardButton("Day 2 下午", "agenda_2B")]]
+                 InlineKeyboardButton("Day 2 下午", "agenda_2B")],
+                [InlineKeyboardButton("回主選單", "help")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await cli.send_photo(msg.chat.id, "https://i.imgur.com/jDeodyc.jpg",
                          "議程總覽\n你想看哪個演講廳", reply_markup=reply_markup)
@@ -35,6 +36,8 @@ async def events_callback(cli: Client, callback: CallbackQuery) -> None:
         }, {
             "Day 1": "agenda_Day1",
             "Day 2": "agenda_Day2"
+        }, {
+            "回主選單": "help"
         }]
 
         media = InputMediaPhoto("https://i.imgur.com/jDeodyc.jpg",

@@ -14,7 +14,8 @@ async def events(cli: Client, msg: Message) -> None:
                 [InlineKeyboardButton("密室逃脫 Virtual Room Escape", "events_room"),
                  InlineKeyboardButton("煉蠱大會 Malware Playground", "events_playground")],
                 [InlineKeyboardButton("大會代幣 HITCON Token", "events_token"),
-                 InlineKeyboardButton("限量紀念品", "events_omiyage")]]
+                 InlineKeyboardButton("限量紀念品", "events_omiyage")],
+                [InlineKeyboardButton("回主選單", "help")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await cli.send_photo(msg.chat.id, "https://i.imgur.com/2bnJbTx.png",
                          "今年大會活動有這些\n請選擇想了解的活動", reply_markup=reply_markup)
@@ -25,13 +26,14 @@ async def events_callback(cli: Client, callback: CallbackQuery) -> None:
     if callback.data == "events":
         buttons = [{
             "線上會場 Minetest Venue": "events_minetest",
-            "線上通訊 Online Chatroom": "events_chatroom"
+            "線上通訊 Online Chatroom": "events_chatroom",
+            "密室逃脫 Virtual Room Escape": "events_room"
         }, {
-            "密室逃脫 Virtual Room Escape": "events_room",
-            "煉蠱大會 Malware Playground": "events_playground"
-        }, {
+            "煉蠱大會 Malware Playground": "events_playground",
             "大會代幣 HITCON Token": "events_token",
             "限量紀念品": "events_omiyage"
+        }, {
+            "回主選單": "help"
         }]
 
         media = InputMediaPhoto("https://i.imgur.com/2bnJbTx.png",
