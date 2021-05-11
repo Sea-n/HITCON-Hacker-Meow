@@ -65,7 +65,7 @@ async def map_callback(cli: Client, callback: CallbackQuery) -> None:
 
     if media:
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await cli.edit_message_media(callback.from_user.id,
+        await cli.edit_message_media(callback.message.chat.id,
                                      callback.message.message_id,
                                      media=media, reply_markup=reply_markup)
 
