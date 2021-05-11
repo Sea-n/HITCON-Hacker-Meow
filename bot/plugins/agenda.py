@@ -24,7 +24,7 @@ async def agenda(cli: Client, msg: Message) -> None:
 
 
 @Client.on_callback_query(filters.regex('^agenda'))
-async def map_callback(cli: Client, callback: CallbackQuery) -> None:
+async def events_callback(cli: Client, callback: CallbackQuery) -> None:
     if callback.data == "agenda":
         buttons = [{
             "格萊聽": "agenda_great",

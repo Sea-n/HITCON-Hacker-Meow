@@ -33,7 +33,7 @@ async def map_callback(cli: Client, callback: CallbackQuery) -> None:
 
     if callback.data == "map_13F":
         keyboard = [[InlineKeyboardButton("議程（格萊聽）", "agenda_great"),
-                     InlineKeyboardButton("XX 活動（天漾聽）", "event_skyview")],
+                     InlineKeyboardButton("XX 活動（天漾聽）", "events_skyview")],
                     [InlineKeyboardButton("回樓層圖", "map")]]
 
         media = InputMediaPhoto("https://i.imgur.com/MqYzHd5.png",
@@ -42,7 +42,7 @@ async def map_callback(cli: Client, callback: CallbackQuery) -> None:
     elif callback.data == "map_14F":
         keyboard = [[InlineKeyboardButton("攤位（康定聽）", "booth_kd"),
                      InlineKeyboardButton("贊助商（艋舺聽）", "booth_bk"),
-                     InlineKeyboardButton("XX 活動（萬大聽）", "event_wd")],
+                     InlineKeyboardButton("XX 活動（萬大聽）", "events_wd")],
                     [InlineKeyboardButton("回樓層圖", "map")]]
 
         media = InputMediaPhoto("https://i.imgur.com/y7UcbyJ.png",
