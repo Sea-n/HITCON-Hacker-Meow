@@ -14,11 +14,35 @@ async def irc_bridge(_: Client, msg: Message) -> None:
     if str(msg.chat.id) != os.getenv("TELEGRAM_GROUP"):
         return
 
-    if msg.text is None:
-        return
+    p: list = [_ for _ in dir(msg) if
+               not _.startswith('_') and
+               not _ in
+                   ('chat', 'date', 'default', 'forward_date', 'forward_from', 'from_user', 'link', 'media_group_id',
+                    'message_id') and
+               not getattr(msg, _) in (None, True, False) and
+               not hasattr(getattr(msg, _), '__self__')]
 
-    if msg.text.startswith("/"):
-        return
+    irc_string: str = f"{msg.from_user.first_name}({msg.from_user.id}): "
 
-    irc_string: str = f"{msg.from_user.first_name}({msg.from_user.id}): {msg.text}"
+    if "reply_to_message" in p:
+        p.remove("reply_to_message")
+        irc_string += f"[Reply to {msg.reply_to_message.from_user.first_name}] "
+
+    if "text" in p:
+        if msg.text.startswith("/"):
+            return
+        irc_string += f"{msg.text}"
+
+    else:
+        log.debug(p)
+
+        try:
+            p.remove("caption")
+
+        except ValueError:
+            irc_string += f"A telegram {p[0]}"
+
+        else:
+            irc_string += f"A telegram {p[0]} with caption {msg.caption}"
+
     bot.irc.privmsg(os.getenv("IRC_CHANNEL"), irc_string)

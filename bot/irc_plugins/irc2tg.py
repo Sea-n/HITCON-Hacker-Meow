@@ -16,7 +16,7 @@ def on_all_events(_: IrcBot, event: str = None):
 
 @event('^:(?P<nick>\S+)!\S+@\S+ PRIVMSG (?P<channel>#\S+) :(?P<text>.*)')  # regex
 def on_new_channel_messages(_: IrcBot, nick: str = None, channel: str = None, text: str = None):
-    log.debug(nick, channel, text)
+    log.debug(f"{nick}@{channel} => {text}")
     if text.startswith("!"):
         return
     bot.app.loop.create_task(
