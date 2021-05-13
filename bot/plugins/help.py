@@ -9,6 +9,7 @@ log: logging.Logger = logging.getLogger(__name__)
 
 @Client.on_message(filters.command("help") & ~filters.forwarded)
 @Client.on_message(filters.command("start") & ~filters.forwarded)
+# TODO: split start to check token and add user to whitelist
 async def help(cli: Client, msg: Message) -> None:
     keyboard = [[InlineKeyboardButton("議程資訊", "agenda"),
                  InlineKeyboardButton("精彩活動", "events")],
