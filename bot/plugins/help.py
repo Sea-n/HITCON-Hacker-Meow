@@ -1,15 +1,12 @@
 import logging
 
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.types import CallbackQuery, InputMediaPhoto
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
 
 log: logging.Logger = logging.getLogger(__name__)
 
 
-@Client.on_message(filters.command("help") & ~filters.forwarded)
-@Client.on_message(filters.command("start") & ~filters.forwarded)
-# TODO: split start to check token and add user to whitelist
+@Client.on_message(filters.command("help") & ~ filters.forwarded)
 async def help(cli: Client, msg: Message) -> None:
     keyboard = [[InlineKeyboardButton("議程資訊", "agenda"),
                  InlineKeyboardButton("精彩活動", "events")],

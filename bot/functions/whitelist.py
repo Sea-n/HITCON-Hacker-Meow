@@ -1,10 +1,9 @@
+import json
 import logging
+import os
 from typing import List, TextIO
 
 log: logging.Logger = logging.getLogger(__name__)
-
-import json
-import os
 
 FILE_PATH: str = os.getcwd() + "/users.json"
 
