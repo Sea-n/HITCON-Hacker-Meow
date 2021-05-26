@@ -14,5 +14,5 @@ async def pre_check(_: Client, msg: Message) -> None:
         return
 
     if msg.from_user.id not in get_whitelist():
-        await msg.reply("You have no rights!")
+        await msg.reply("駭客喵喵還不認識你喔，請跟我講通關密語或等到公開測試")
         msg.stop_propagation()
