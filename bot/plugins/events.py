@@ -27,9 +27,10 @@ async def events_callback(cli: Client, callback: CallbackQuery) -> None:
         buttons = [{
             "線上會場 Minetest Venue": "events_minetest",
             "線上通訊 Online Chatroom": "events_chatroom",
-            "密室逃脫 Virtual Room Escape": "events_room"
         }, {
-            "煉蠱大會 Malware Playground": "events_playground",
+            "密室逃脫 Virtual Room Escape": "events_room",
+            "煉蠱大會 Malware Playground": "events_playground"
+        }, {
             "大會代幣 HITCON Token": "events_token",
             "限量紀念品": "events_omiyage"
         }, {

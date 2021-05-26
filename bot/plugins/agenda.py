@@ -30,6 +30,7 @@ async def events_callback(cli: Client, callback: CallbackQuery) -> None:
         buttons = [{
             "格萊聽": "agenda_great",
             "天漾聽": "agenda_skyview",
+        }, {
             "康定聽": "agenda_kd",
             "天悅聽": "agenda_ty",
             "萬大聽": "agenda_wd"
@@ -72,6 +73,7 @@ async def events_callback(cli: Client, callback: CallbackQuery) -> None:
             "13:00 - 13:50": "agenda_Day1B",
         }, {
             "14:00 - 14:50": "agenda_Day1C",
+        }, {
             "15:30 - 16:20": "agenda_Day1D",
             "16:30 - 17:20": "agenda_Day1E"
         }, {
@@ -85,6 +87,7 @@ async def events_callback(cli: Client, callback: CallbackQuery) -> None:
         buttons = [{
             "09:20 - 10:10": "agenda_Day2A",
             "10:20 - 11:10": "agenda_Day2B",
+        }, {
             "11:20 - 12:10": "agenda_Day2C",
         }, {
             "13:50 - 14:40": "agenda_Day2D",
@@ -102,6 +105,7 @@ async def events_callback(cli: Client, callback: CallbackQuery) -> None:
             "通訊網路安全研究，從 GSM 到 5G NR": "agenda_Day1B2",
         }, {
             "練蠱大賽": "agenda_Day1C3",
+        }, {
             "A Million Boluses: Discovery and Disclosure": "agenda_Day1D4",
             "IoT Hacking 101": "agenda_Day1E5"
         }, {
