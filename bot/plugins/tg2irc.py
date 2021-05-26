@@ -17,9 +17,9 @@ async def irc_bridge(_: Client, msg: Message) -> None:
 
     p: list = [_ for _ in dir(msg) if
                not _.startswith('_') and
-               not _ in
-                   ('chat', 'date', 'default', 'forward_date', 'forward_from', 'from_user', 'link', 'media_group_id',
-                    'message_id') and
+               _ not in (
+                   'chat', 'date', 'default', 'forward_date', 'forward_from', 'from_user', 'link', 'media_group_id',
+                   'message_id') and
                not getattr(msg, _) in (None, True, False) and
                not hasattr(getattr(msg, _), '__self__')]
 
@@ -37,7 +37,17 @@ async def irc_bridge(_: Client, msg: Message) -> None:
     if "text" in p:
         if msg.text.startswith("/"):
             return
-        irc_string += f"{msg.text}"
+
+        split_lines: list[str] = msg.text.split("\n", maxsplit=4)
+
+        if len(split_lines) > 1:
+            irc_string += f"{split_lines[0]}"
+            split_lines[0]: str = irc_string
+            send_multilines(split_lines)
+            return
+
+        else:
+            irc_string += f"{msg.text}"
 
     else:
         log.debug(p)
@@ -52,3 +62,11 @@ async def irc_bridge(_: Client, msg: Message) -> None:
             irc_string += f"A telegram {p[0]} with caption {msg.caption}"
 
     bot.irc.privmsg(os.getenv("IRC_CHANNEL"), irc_string)
+
+
+def send_multilines(lines: list[str]):
+    empty: str = lines[0].split(':')[0]
+    bot.irc.privmsg(os.getenv("IRC_CHANNEL"), lines[0])
+
+    for _ in lines[1:]:
+        bot.irc.privmsg(os.getenv("IRC_CHANNEL"), f"{' ' * len(empty)}  {_}")
