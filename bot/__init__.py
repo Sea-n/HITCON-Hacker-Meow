@@ -38,7 +38,7 @@ class Bot:
             nick=os.getenv("IRC_NICKNAME"), autojoins=[os.getenv("IRC_CHANNEL")],
             username=os.getenv("IRC_NICKNAME"), realname=os.getenv("IRC_INFO"),
             sasl_username=os.getenv("IRC_NICKNAME"), sasl_password=os.getenv("IRC_PASSWORD"),
-            host='chat.freenode.net', port=6667, ssl=False, debug=True,
+            host='chat.freenode.net', port=6697, ssl=True, debug=True,
             includes=[
                 'irc3.plugins.command',
                 'irc3.plugins.logger',

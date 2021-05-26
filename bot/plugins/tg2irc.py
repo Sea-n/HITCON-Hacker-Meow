@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -22,11 +23,16 @@ async def irc_bridge(_: Client, msg: Message) -> None:
                not getattr(msg, _) in (None, True, False) and
                not hasattr(getattr(msg, _), '__self__')]
 
-    irc_string: str = f"{msg.from_user.first_name}({msg.from_user.id}): "
+    irc_string: str = f"{msg.from_user.first_name}: "
 
     if "reply_to_message" in p:
         p.remove("reply_to_message")
-        irc_string += f"[Reply to {msg.reply_to_message.from_user.first_name}] "
+        if msg.reply_to_message.from_user.is_self:
+            pattern = re.compile('^<([^>]+)>: ')
+            nick = pattern.search(msg.reply_to_message.text).group(1)
+            irc_string += f"{nick}, "
+        else:
+            irc_string += f"[Reply to {msg.reply_to_message.from_user.first_name}] "
 
     if "text" in p:
         if msg.text.startswith("/"):
