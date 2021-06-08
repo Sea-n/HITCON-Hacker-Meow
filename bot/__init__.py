@@ -1,14 +1,16 @@
+import asyncio
 import logging
 import os
 import platform
-import sys
+import time
+from asyncio import AbstractEventLoop
 from datetime import datetime
-from typing import Optional, Union
+from signal import SIGABRT, SIGINT, SIGTERM
+from typing import Any, Optional, Union
 
 from irc3 import IrcBot
 from pyrogram import Client
 from pyrogram.errors import ApiIdInvalid, AuthKeyUnregistered
-from pyrogram.methods.utilities.idle import idle
 from pyrogram.session import Session
 from pyrogram.types import User
 
@@ -54,22 +56,52 @@ class Bot:
         return cls._instance
 
     def run(self):
-        self.app.run(self.run_once())
+        loop: AbstractEventLoop = asyncio.get_event_loop()
+        run = loop.run_until_complete
+
+        run(self.run_once())
+
         self.app.plugins = {
             "enabled": True,
             "root": "bot.plugins",
             "include": [],
             "exclude": []
         }
-
         self.app.start()
+        log.debug("[TG] Bot started")
         self.irc.run(False)
+        log.debug("[IRC] Bot started")
 
-        # TODO: fix exit error
-        idle()
+        log.debug("Remove registered handlers and register new handlers")
+
+        def handler_int() -> Any:
+            log.debug(f"Stop signal received (SIGINT). Exiting...")
+            self.irc.notify('SIGINT')
+            if getattr(self.irc, 'protocol', None):
+                self.irc.quit('INT')
+                time.sleep(1)
+            self.irc.loop.stop()
+
+        def handler_term() -> Any:
+            log.debug(f"Stop signal received (SIGTERM). Exiting...")
+
+        def handler_abort() -> Any:
+            log.debug(f"Stop signal received (SIGABRT). Exiting...")
+
+        for s in (SIGINT, SIGTERM, SIGABRT):
+            loop.remove_signal_handler(s)
+        loop.add_signal_handler(SIGINT, handler_int)
+        loop.add_signal_handler(SIGTERM, handler_term)
+        loop.add_signal_handler(SIGABRT, handler_abort)
+
+        log.debug("Idling...")
+        loop.run_forever()
+        log.debug("Start stopping tasks")
 
         self.app.stop()
-        self.irc.quit()
+        log.debug("[TG] Bot stopped")
+        self.irc.quit("Client stop successfully")
+        log.debug("[IRC] Bot stopped")
 
     async def run_once(self):
         # Disable notice
@@ -78,6 +110,10 @@ class Bot:
 
         try:
             await self.app.start()
+
+        except (ApiIdInvalid, AttributeError):
+            log.critical("[Failed] Api ID is invalid")
+            exit(1)
 
         except AuthKeyUnregistered:
             log.critical("[Oops!] Session expired!")
@@ -92,17 +128,14 @@ class Bot:
             info_str += f" {me.last_name}" if me.last_name else ""
             info_str += f" (@{me.username})" if me.username else ""
             info_str += f" ID: {me.id}"
+
             log.info(info_str)
 
             self.me: User = me
 
-        except ApiIdInvalid:
-            log.critical("[Failed] Api ID is invalid")
-            sys.exit(1)
-
         except Exception as e:
             log.exception(e)
-            sys.exit(1)
+            exit(1)
 
         log.info("Client started successfully")
 
