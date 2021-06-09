@@ -4,6 +4,7 @@ import re
 
 from pyrogram import Client, filters
 from pyrogram.types import Message
+from typing import List
 
 from main import bot
 
@@ -38,7 +39,7 @@ async def irc_bridge(_: Client, msg: Message) -> None:
         if msg.text.startswith("/"):
             return
 
-        split_lines: list[str] = msg.text.split("\n", maxsplit=4)
+        split_lines: List[str] = msg.text.split("\n", maxsplit=4)
 
         if len(split_lines) > 1:
             irc_string += f"{split_lines[0]}"
@@ -64,7 +65,7 @@ async def irc_bridge(_: Client, msg: Message) -> None:
     bot.irc.privmsg(os.getenv("IRC_CHANNEL"), irc_string)
 
 
-def send_multilines(lines: list[str]):
+def send_multilines(lines: List[str]):
     empty: str = lines[0].split(':')[0]
     bot.irc.privmsg(os.getenv("IRC_CHANNEL"), lines[0])
 

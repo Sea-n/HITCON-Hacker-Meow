@@ -1,6 +1,7 @@
 import logging
 from uuid import uuid4
 
+from typing import List
 from pyrogram import Client, filters, raw
 from pyrogram.raw.base import InputBotInlineResult
 from pyrogram.types import CallbackGame, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InlineQuery, Message
@@ -16,7 +17,7 @@ async def inline_query(cli: Client, inline: InlineQuery) -> None:
         # game button **MUST** in (1, 1)
     ])
 
-    inline_result: list[InputBotInlineResult] = [
+    inline_result: List[InputBotInlineResult] = [
         raw.types.InputBotInlineResultGame(
             id=str(uuid4()),
             short_name=GAME_SHORT_NAME,
