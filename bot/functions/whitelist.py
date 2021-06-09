@@ -9,17 +9,11 @@ FILE_PATH: str = os.getcwd() + "/users.json"
 
 
 def get_whitelist() -> List[int]:
-    try:
-        f: TextIO = open(FILE_PATH, "r")
-        f.close()
+    if not os.path.exists(FILE_PATH):
+        return []
 
-    except FileNotFoundError:
-        with open(FILE_PATH, "w") as f:
-            f.write("{\"users\":[]}")
-
-    finally:
-        with open(FILE_PATH, "r") as f:
-            s: str = f.read()
+    with open(FILE_PATH, "r") as f:
+        s: str = f.read()
 
     file: dict = json.loads(s)
     users: list = file['users']
