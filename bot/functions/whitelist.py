@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from typing import List, TextIO
+from typing import List
 
 log: logging.Logger = logging.getLogger(__name__)
 
@@ -27,8 +27,8 @@ def add_whitelist(uid: int) -> None:
 
     if uid not in users:
         users.append(uid)
-        data['users'] = sorted(users)
 
+    data['users'] = sorted(users)
     string: str = json.dumps(data)
 
     with open(FILE_PATH, "w") as f:
