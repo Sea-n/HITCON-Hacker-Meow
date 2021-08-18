@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import platform
+import sys
 import time
 from asyncio import AbstractEventLoop
 from datetime import datetime
@@ -80,7 +81,7 @@ class Bot:
             if getattr(self.irc, 'protocol', None):
                 self.irc.quit('INT')
                 time.sleep(1)
-            self.irc.loop.stop()
+            # self.irc.loop.stop()
 
         def handler_term() -> Any:
             log.debug(f"Stop signal received (SIGTERM). Exiting...")
@@ -88,14 +89,26 @@ class Bot:
         def handler_abort() -> Any:
             log.debug(f"Stop signal received (SIGABRT). Exiting...")
 
-        for s in (SIGINT, SIGTERM, SIGABRT):
-            loop.remove_signal_handler(s)
-        loop.add_signal_handler(SIGINT, handler_int)
-        loop.add_signal_handler(SIGTERM, handler_term)
-        loop.add_signal_handler(SIGABRT, handler_abort)
+        if sys.platform != "win32":
+            for s in (SIGINT, SIGTERM, SIGABRT):
+                loop.remove_signal_handler(s)
+            loop.add_signal_handler(SIGINT, handler_int)
+            loop.add_signal_handler(SIGTERM, handler_term)
+            loop.add_signal_handler(SIGABRT, handler_abort)
 
-        log.debug("Idling...")
-        loop.run_forever()
+            log.debug("Idling...")
+            loop.run_forever()
+
+        elif sys.platform == "win32":
+            # windows machine doesn't have signal system, raise exception on exit
+            log.debug("Idling...")
+
+            try:
+                loop.run_forever()
+
+            except KeyboardInterrupt:
+                handler_int()
+
         log.debug("Start stopping tasks")
 
         self.app.stop()
