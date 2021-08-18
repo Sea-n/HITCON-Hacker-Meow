@@ -1,8 +1,8 @@
-async-lru==1.0.2
+﻿async-lru==1.0.2
 docopt==0.6.2
 irc3==1.1.7
 pyaes==1.6.1
-Pyrogram==1.2.9
+Pyrogram @ git+https://github.com/allen0099/pyrogram.git@10208ea3cc1d4c3b54a89c6e976e27ba237a97d3
 PySocks==1.7.1
 python-dotenv==0.17.1
 TgCrypto==1.2.2
