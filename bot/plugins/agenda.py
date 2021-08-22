@@ -1,25 +1,49 @@
 import logging
 
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.types import CallbackQuery, InputMediaPhoto
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
+
+from bot.functions import get_agenda_by_info, get_agenda_by_room, get_agenda_by_time
 
 log: logging.Logger = logging.getLogger(__name__)
 
 
-@Client.on_message(filters.command("agenda") & ~filters.forwarded)
+def get_time_str(day, time) -> str:
+    if day == "1":
+        table = {
+            "A": "11:00 - 11:50",
+            "B": "13:00 - 13:50",
+            "C": "14:00 - 14:50",
+            "D": "15:30 - 16:20",
+            "E": "16:30 - 17:20",
+        }
+        return table[time]
+    else:
+        table = {
+            "A": "09:20 - 10:10",
+            "B": "10:20 - 11:10",
+            "C": "11:20 - 12:10",
+            "D": "13:50 - 14:40",
+            "E": "14:50 - 15:40",
+        }
+        return table[time]
+
+
+@Client.on_message(filters.command("agenda") & ~ filters.forwarded)
 async def agenda(cli: Client, msg: Message) -> None:
-    keyboard = [[InlineKeyboardButton("格萊聽", "agenda_great"),
-                 InlineKeyboardButton("天漾聽", "agenda_skyview"),
-                 InlineKeyboardButton("康定聽", "agenda_kd"),
-                 InlineKeyboardButton("天悅聽", "agenda_ty"),
-                 InlineKeyboardButton("萬大聽", "agenda_wd")],
-                [InlineKeyboardButton("Day 1 上午", "agenda_1A"),
-                 InlineKeyboardButton("Day 1 下午", "agenda_1B"),
-                 InlineKeyboardButton("Day 2 上午", "agenda_2A"),
-                 InlineKeyboardButton("Day 2 下午", "agenda_2B")],
-                [InlineKeyboardButton("回主選單", "help")]]
+    keyboard = [[
+        InlineKeyboardButton("Track 01", "agenda_R0"),
+    ], [
+        InlineKeyboardButton("Track 02", "agenda_R1"),
+        InlineKeyboardButton("Track 03", "agenda_R2"),
+        InlineKeyboardButton("Track 04", "agenda_R3"),
+        InlineKeyboardButton("Track 05", "agenda_R4"),
+    ], [
+        InlineKeyboardButton("回主選單", "help")
+    ]]
+
     reply_markup = InlineKeyboardMarkup(keyboard)
+
     await cli.send_photo(msg.chat.id, "https://i.imgur.com/jDeodyc.jpg",
                          "議程總覽\n你想看哪個演講廳", reply_markup=reply_markup)
 
@@ -27,122 +51,121 @@ async def agenda(cli: Client, msg: Message) -> None:
 @Client.on_callback_query(filters.regex('^agenda'))
 async def events_callback(cli: Client, callback: CallbackQuery) -> None:
     if callback.data == "agenda":
-        buttons = [{
-            "格萊聽": "agenda_great",
-            "天漾聽": "agenda_skyview",
-        }, {
-            "康定聽": "agenda_kd",
-            "天悅聽": "agenda_ty",
-            "萬大聽": "agenda_wd"
-        }, {
-            "Day 1": "agenda_Day1",
-            "Day 2": "agenda_Day2"
-        }, {
-            "回主選單": "help"
-        }]
+        keyboard = [[
+            InlineKeyboardButton("Track 01", "agenda_R0"),
+            InlineKeyboardButton("Track 02", "agenda_R1"),
+            InlineKeyboardButton("Track 03", "agenda_R2"),
+            InlineKeyboardButton("Track 04", "agenda_R3"),
+            InlineKeyboardButton("Track 05", "agenda_R4"),
+        ], [
+            InlineKeyboardButton("Day 1", "agenda_D1"),
+            InlineKeyboardButton("Day 2", "agenda_D2"),
+        ], [
+            InlineKeyboardButton("回主選單", "help")
+        ]]
 
         media = InputMediaPhoto("https://i.imgur.com/jDeodyc.jpg",
                                 "議程總覽\n你想看哪個演講廳")
-
-    elif callback.data == "agenda_great":
-        buttons = [{
-            "金融業如何迎擊數位戰場": "agenda_great_1A",
-            "Breaking Samsung's Root": "agenda_great_2A"
-        }, {
-            "主動式資安防禦策略": "agenda_great_1B",
-            "From LNK to RCE": "agenda_great_2B"
-        }, {
-            "如何兼顧疫情控制與隱私保護": "agenda_great_1C",
-            "RE: 從零開始的 OOO DEF": "agenda_great_2C"
-        }, {
-            "疫情後資安人才培育的挑戰": "agenda_great_1D",
-            "Development of Signaling Spoofing": "agenda_great_2D"
-        }, {
-            "人工智慧能否為人類指引": "agenda_great_1E",
-            "How I Hacked Facebook Again!": "agenda_great_2E"
-        }, {
-            "回議程總覽": "agenda"
-        }]
-
-        media = InputMediaPhoto("https://i.imgur.com/7JFS5PL.png",
-                                "格萊聽議程總覽\n請選擇 XXX")
-
-    elif callback.data == "agenda_Day1":
-        buttons = [{
-            "11:00 - 11:50": "agenda_Day1A",
-            "13:00 - 13:50": "agenda_Day1B",
-        }, {
-            "14:00 - 14:50": "agenda_Day1C",
-        }, {
-            "15:30 - 16:20": "agenda_Day1D",
-            "16:30 - 17:20": "agenda_Day1E"
-        }, {
-            "回議程總覽": "agenda"
-        }]
-
-        media = InputMediaPhoto("https://i.imgur.com/SsAfqPg.png",
-                                "Day 1 議程總覽\n請選擇時段")
-
-    elif callback.data == "agenda_Day2":
-        buttons = [{
-            "09:20 - 10:10": "agenda_Day2A",
-            "10:20 - 11:10": "agenda_Day2B",
-        }, {
-            "11:20 - 12:10": "agenda_Day2C",
-        }, {
-            "13:50 - 14:40": "agenda_Day2D",
-            "14:50 - 15:40": "agenda_Day2E",
-        }, {
-            "回議程總覽": "agenda"
-        }]
-
-        media = InputMediaPhoto("https://i.imgur.com/T2WWUla.png",
-                                "Day 2 議程總覽\n請選擇時段")
-
-    elif callback.data == "agenda_Day1A":
-        buttons = [{
-            "金融業如何迎擊數位戰場的第一道烽火": "agenda_Day1A1",
-            "通訊網路安全研究，從 GSM 到 5G NR": "agenda_Day1B2",
-        }, {
-            "練蠱大賽": "agenda_Day1C3",
-        }, {
-            "A Million Boluses: Discovery and Disclosure": "agenda_Day1D4",
-            "IoT Hacking 101": "agenda_Day1E5"
-        }, {
-            "回 Day 1 議程": "agenda_Day1"
-        }]
-
-        media = InputMediaPhoto("https://i.imgur.com/IicQq8u.png",
-                                "Day 1 上午 11:00 - 11:50 議程\n請選擇場次")
-
-    elif callback.data in ["agenda_great_1A", "agenda_Day1A1"]:
-        buttons = [{
-            "Slido": "https://app.sli.do/event/ycm3yt5t",
-            "議程共筆": "https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ",
-            "會場地圖": "map_13F",
-        }, {
-            "回到格萊聽": "agenda_great",
-            "同時段議程": "agenda_Day1A",
-        }]
-
-        media = InputMediaPhoto("https://i.imgur.com/WmTrCaK.png",
-                                "<b>[ HITCON 論壇 ] 金融業如何迎擊數位戰場的第一道烽火</b>\n\n 金融業是全國資安首當其衝的攻擊熱點，各單位的資安策略及措施，也非常適合各產業企業做為參考，有做為標竿的作用。本次探討的方向會針對「防禦機制的有效性評估」、「供應鏈安全」、「資安策略及預算投放」進行，以期透過這樣的討論讓聽眾知道金融機構資安的超前部署，增加民眾對資安的信心，也做為其他業者的表率。")
-
+    # agenda_{ROOM}_{DAY}{TIME}
+    # example: R0, R0_1A, D1, D1A
     else:
-        log.debug(f"Unknown callback {callback.data}")
-        await cli.answer_callback_query(callback.id, f"尚未實作 {callback.data}")
-        return
+        _ = callback.data.split("_")
+        if len(_) == 2:
+            # test first char D or R
+            room_or_day: str = _[1]
 
-    keyboard = []
-    for k in buttons:
-        row = []
-        for txt in k:
-            if 'https://' in k[txt]:
-                button = InlineKeyboardButton(text=txt, url=k[txt])
-            else:
-                button = InlineKeyboardButton(text=txt, callback_data=k[txt])
-            row.append(button)
-        keyboard.append(row)
+            if room_or_day.startswith("R"):
+                room: str = room_or_day
+                agendas: dict = get_agenda_by_room(room)
+
+                keyboard: list[list[InlineKeyboardButton]] = []
+
+                for _ in agendas:
+                    agenda_keyboard: list[InlineKeyboardButton] = []
+                    for agenda in agendas.get(_):
+                        agenda_keyboard.append(
+                            InlineKeyboardButton(agenda["topic"], f"agenda_{room}_D{agenda['day']}{_}")
+                        )
+                    keyboard.append(agenda_keyboard)
+
+                keyboard.append([InlineKeyboardButton("回議程總覽", "agenda")])
+
+                media = InputMediaPhoto("https://i.imgur.com/SsAfqPg.png",
+                                        "來個貓貓照")
+
+            elif room_or_day.startswith("D"):
+
+                if room_or_day == "D1":
+                    keyboard = [[
+                        InlineKeyboardButton(get_time_str("1", "A"), "agenda_D1A"),
+                        InlineKeyboardButton(get_time_str("1", "B"), "agenda_D1B"),
+                    ], [
+                        InlineKeyboardButton(get_time_str("1", "C"), "agenda_D1C"),
+                    ], [
+                        InlineKeyboardButton(get_time_str("1", "D"), "agenda_D1D"),
+                        InlineKeyboardButton(get_time_str("1", "E"), "agenda_D1E"),
+                    ], [
+                        InlineKeyboardButton("回議程總覽", "agenda")
+                    ]]
+
+                    media = InputMediaPhoto("https://i.imgur.com/SsAfqPg.png",
+                                            "Day 1 議程總覽\n請選擇時段")
+
+                elif room_or_day == "D2":
+                    keyboard = [[
+                        InlineKeyboardButton(get_time_str("2", "A"), "agenda_D2A"),
+                        InlineKeyboardButton(get_time_str("2", "B"), "agenda_D2B"),
+                    ], [
+                        InlineKeyboardButton(get_time_str("2", "C"), "agenda_D2C"),
+                    ], [
+                        InlineKeyboardButton(get_time_str("2", "D"), "agenda_D2D"),
+                        InlineKeyboardButton(get_time_str("2", "E"), "agenda_D2E"),
+                    ], [
+                        InlineKeyboardButton("回議程總覽", "agenda")
+                    ]]
+
+                    media = InputMediaPhoto("https://i.imgur.com/T2WWUla.png",
+                                            "Day 2 議程總覽\n請選擇時段")
+
+                else:
+                    day: str = room_or_day[1]
+                    time: str = room_or_day[-1]
+
+                    agendas: list = get_agenda_by_time(time, day)
+
+                    keyboard: list[list[InlineKeyboardButton]] = []
+
+                    for agenda in agendas:
+                        agenda_keyboard: list[InlineKeyboardButton] = []
+                        agenda_keyboard.append(
+                            InlineKeyboardButton(agenda["topic"], agenda["callback"])
+                        )
+                        keyboard.append(agenda_keyboard)
+
+                    keyboard.append([InlineKeyboardButton(f"回 Day {day} 議程", f"agenda_D{day}")])
+
+                    media = InputMediaPhoto("https://i.imgur.com/IicQq8u.png",
+                                            f"Day {day} {get_time_str(day, time)} 議程\n"
+                                            "請選擇場次")
+        else:
+            # multiple variables
+            _, room, time = _
+            day = time[1]
+            time = time[-1]
+
+            agenda = get_agenda_by_info(room, day, time)
+
+            keyboard: list[list[InlineKeyboardButton]] = []
+
+            for link in agenda["links"]:
+                keyboard.append([InlineKeyboardButton(link, url=agenda["links"].get(link))])
+
+            keyboard.append([
+                InlineKeyboardButton("回到上一頁", f"agenda_{room}"),
+                InlineKeyboardButton("同時段議程", f"agenda_D{day}{time}"),
+            ])
+
+            media = InputMediaPhoto(agenda["photo_link"], agenda["description"])
 
     await cli.edit_message_media(callback.message.chat.id,
                                  callback.message.message_id,
