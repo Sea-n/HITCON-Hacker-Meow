@@ -15,8 +15,7 @@ async def help(cli: Client, msg: Message) -> None:
         InlineKeyboardButton("交通方式", "traffic"),
         InlineKeyboardButton("場地平面圖", "plan"),
     ], [
-        InlineKeyboardButton("HITCON 商店", "shop"),
-        InlineKeyboardButton("HITCON 點數", "points"),
+        InlineKeyboardButton("HITCON 商城", "shop"),
     ], [
         InlineKeyboardButton("HITCON 公告頻道", url="https://t.me/H17C0N"),
         InlineKeyboardButton("HITCON 聊天群組", url="https://t.me/HacksInTaiwan"),
