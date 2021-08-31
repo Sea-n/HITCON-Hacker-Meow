@@ -15,40 +15,87 @@ def _get_data() -> dict:
     return data
 
 
-def get_agenda_by_room(room: str) -> dict:
-    file: dict = _get_data()
-    agendas: dict = file.get(room)
+def get_room_name(room: str) -> str:
+    data: dict = _get_data()
+    rooms: dict = data.get("rooms")
+    room_name: str = rooms.get(room.lower()).get("name")
+
+    return room_name
+
+
+def get_room_photo(room: str) -> str:
+    data: dict = _get_data()
+    rooms: dict = data.get("rooms")
+    room_name: str = rooms.get(room.lower()).get("photo")
+
+    return room_name
+
+
+def get_time_str(day, time) -> str:
+    slots = get_day_slots(day)
+
+    for _ in slots:
+        tmp = _.popitem()
+        if tmp[0] == time:
+            return f"{tmp[1].get('start')} - {tmp[1].get('end')}"
+
+
+def get_time_photo(day, time) -> str:
+    slots = get_day_slots(day)
+
+    for _ in slots:
+        tmp = _.popitem()
+        if tmp[0] == time:
+            return f"{tmp[1].get('photo')}"
+
+
+def get_day_slots(day: str) -> list[dict]:
+    data: dict = _get_data()
+    times: dict = data.get("times")
+
+    return times.get(f"day{day}").get("slots")
+
+
+def get_day_photo(day: str) -> str:
+    data: dict = _get_data()
+    time: dict = data.get("times")
+    photo: str = time.get(f"day{day}").get("photo")
+
+    return photo
+
+
+def get_agendas_by_room(room: str) -> list[dict[str, str]]:
+    data: dict = _get_data()
+    agendas: list = data.get("agendas")
 
     list_agenda: list = []
-    for _ in agendas:
-        for agenda in agendas.get(_):
-            agenda["day"] = _
+    for agenda in agendas:
+        if agenda.get("room") == room.lower():
             list_agenda.append(agenda)
 
-    agendas: dict = {agenda["time_slot"]: [] for agenda in list_agenda}
+    list_agenda.sort(key=lambda x: (x["time"][-2], x["time"][-1]))
 
-    for agenda in list_agenda:
-        agendas[agenda["time_slot"]].append(agenda)
-        agendas[agenda["time_slot"]].sort(key=lambda x: x["day"])
-
-    return agendas
+    return list_agenda
 
 
 def get_agenda_by_info(room, day, time) -> dict:
-    file: dict = _get_data()
-    s: list = file.get(room).get(day)
-    for _ in s:
-        if _["time_slot"] == time:
+    data: dict = _get_data()
+
+    agendas: list[dict] = data.get("agendas")
+
+    for _ in agendas:
+        if _["time"] == f"day{day}{time}" and _["room"] == room.lower():
             return _
 
 
-def get_agenda_by_time(time: str, day: str) -> list:
+def get_agendas_by_time(day: str, time: str) -> list:
     data: dict = _get_data()
-    agendas: list[dict] = []
+    agendas: list = data.get("agendas")
 
-    for _ in data:
-        for agenda in data.get(_).get(day):
-            if agenda["time_slot"] == time:
-                agenda["callback"] = f"agenda_{_}_{day}{time}"
-                agendas.append(agenda)
-    return agendas
+    list_agenda: list = []
+    for agenda in agendas:
+        if agenda["time"] == f"day{day}{time}":
+            agenda["callback"] = f"agenda_{agenda['room'].upper()}_{day}{time}"
+            list_agenda.append(agenda)
+
+    return list_agenda

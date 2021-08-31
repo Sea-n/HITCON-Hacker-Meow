@@ -1,0 +1,93 @@
+// page: https://beta5.objgen.com/json/local/design
+agendas[0]
+  room = r0
+  time = day1A
+  title = 金融業如何迎擊數位戰場的第一道烽火
+  description = <b>[ HITCON 論壇 ] 金融業如何迎擊數位戰場的第一道烽火</b>...
+  photo = https://i.imgur.com/WmTrCaK.png
+  links
+    Slido = https://app.sli.do/event/ycm3yt5t
+    議程共筆 = https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ
+
+agendas[1]
+  room = r0
+  time = day1B
+  title = 主動式資安防禦策略，解決 OT 資安相依性風險
+  description = <b>[ HITCON 論壇 ] 主動式資安防禦策略，解決 OT 資安相依性風險</b>...
+  photo = https://i.imgur.com/WmTrCaK.png
+  links
+    Slido = https://app.sli.do/event/ycm3yt5t
+    議程共筆 = https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ
+
+rooms
+  r0
+    name = 國際會議廳
+    photo = https://i.imgur.com/AD3MbBi.jpeg
+  r1
+    name = 第一會議廳
+    photo = https://i.imgur.com/AD3MbBi.jpeg
+  r2
+    name = 第二會議廳
+    photo = https://i.imgur.com/AD3MbBi.jpeg
+  r3
+    name = 遠距會議室
+    photo = https://i.imgur.com/AD3MbBi.jpeg
+  r4
+    name = 交誼廳
+    photo = https://i.imgur.com/AD3MbBi.jpeg
+
+times
+  day1
+    photo = https://i.imgur.com/AD3MbBi.jpeg
+    slots[0]
+      A
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 11:00
+        end = 11:50
+    slots[1]
+      B
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 13:00
+        end = 13:50
+    slots[2]
+      C
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 14:00
+        end = 14:50
+    slots[3]
+      D
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 15:30
+        end = 16:20
+    slots[4]
+      E
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 16:30
+        end = 17:20
+  day2
+    photo = https://i.imgur.com/AD3MbBi.jpeg
+    slots[0]
+      A
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 09:20
+        end = 10:10
+    slots[1]
+      B
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 10:20
+        end = 11:10
+    slots[2]
+      C
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 11:20
+        end = 12:10
+    slots[3]
+      D
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 13:50
+        end = 14:40
+    slots[4]
+      E
+        photo = https://i.imgur.com/Jvh1OQm.jpeg
+        start = 14:50
+        end = 15:40

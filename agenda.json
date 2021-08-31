@@ -1,72 +1,130 @@
 {
-  "R0": {
-    "1": [
-      {
-        "topic": "金融業如何迎擊數位戰場的第一道烽火",
-        "description": "<b>[ HITCON 論壇 ] 金融業如何迎擊數位戰場的第一道烽火</b>\n\n 金融業是全國資安首當其衝的攻擊熱點，各單位的資安策略及措施，也非常適合各產業企業做為參考，有做為標竿的作用。本次探討的方向會針對「防禦機制的有效性評估」、「供應鏈安全」、「資安策略及預算投放」進行，以期透過這樣的討論讓聽眾知道金融機構資安的超前部署，增加民眾對資安的信心，也做為其他業者的表率。",
-        "photo_link": "https://i.imgur.com/WmTrCaK.png",
-        "time_slot": "A",
-        "links": {
-          "Slido": "https://app.sli.do/event/ycm3yt5t",
-          "議程共筆": "https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ"
-        }
-      },
-      {
-        "topic": "主動式資安防禦策略，解決 OT 資安相依性風險",
-        "description": "主動式資安防禦策略，解決 OT 資安相依性風險",
-        "photo_link": "https://hitcon.org/2020/assets/img/speaker/1206396_n.png",
-        "time_slot": "B",
-        "links": {
-          "Slido": "https://app.sli.do/event/5i5l7eri"
-        }
-      },
-      {
-        "topic": "如何兼顧疫情控制與隱私保護",
-        "description": "這次新冠肺炎(武漢肺炎)來得又快又急，此次台灣成功防疫，各類資訊系統將疫情相關資訊彙整起來，功不可沒，從入境的電子表單，防疫手機，電子圍籬，基地台足跡追蹤，口罩分配，入出境資料，職業別註記，可以討論的議題很多，但今天時間有限，會先暫時集中討論健保資訊系統在本次防疫的腳色，如果時間足夠，也希望結束之前能開放現場提問",
-        "photo_link": "https://hitcon.org/2020/assets/img/speaker/9805.JPG",
-        "time_slot": "C",
-        "links": {
-          "Slido": "https://app.sli.do/event/rkaookqd"
-        }
+  "agendas": [
+    {
+      "room": "r0",
+      "time": "day1A",
+      "title": "金融業如何迎擊數位戰場的第一道烽火",
+      "description": "<b>[ HITCON 論壇 ] 金融業如何迎擊數位戰場的第一道烽火</b>...",
+      "photo": "https://i.imgur.com/WmTrCaK.png",
+      "links": {
+        "Slido": "https://app.sli.do/event/ycm3yt5t",
+        "議程共筆": "https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ"
       }
-    ],
-    "2": [
-      {
-        "topic": "Breaking Samsung's Root of Trust: Exploiting Samsung S10 Secure Boot",
-        "description": "Being the highest market share smartphone manufacturer, Samsung conducts a series of protection on Android called Knox Platform to ensure the security of its smartphones. During the booting process, Samsung uses S-boot (Secure Boot) to make sure it can only boot a stocked image...(truncated)",
-        "photo_link": "https://i.imgur.com/WmTrCaK.png",
-        "time_slot": "A",
-        "links": {
-          "Slido": "https://app.sli.do/event/ycm3yt5t",
-          "議程共筆": "https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ"
-        }
+    },
+    {
+      "room": "r0",
+      "time": "day1B",
+      "title": "主動式資安防禦策略，解決 OT 資安相依性風險",
+      "description": "<b>[ HITCON 論壇 ] 主動式資安防禦策略，解決 OT 資安相依性風險</b>...",
+      "photo": "https://i.imgur.com/WmTrCaK.png",
+      "links": {
+        "Slido": "https://app.sli.do/event/ycm3yt5t",
+        "議程共筆": "https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ"
       }
-    ]
+    }
+  ],
+  "rooms": {
+    "r0": {
+      "name": "國際會議廳",
+      "photo": "https://i.imgur.com/AD3MbBi.jpeg"
+    },
+    "r1": {
+      "name": "第一會議廳",
+      "photo": "https://i.imgur.com/AD3MbBi.jpeg"
+    },
+    "r2": {
+      "name": "第二會議廳",
+      "photo": "https://i.imgur.com/AD3MbBi.jpeg"
+    },
+    "r3": {
+      "name": "遠距會議室",
+      "photo": "https://i.imgur.com/AD3MbBi.jpeg"
+    },
+    "r4": {
+      "name": "交誼廳",
+      "photo": "https://i.imgur.com/AD3MbBi.jpeg"
+    }
   },
-  "R1": {
-    "1": [
-      {
-        "topic": "R1 金融業如何迎擊數位戰場的第一道烽火",
-        "description": "<b>[ HITCON 論壇 ] 金融業如何迎擊數位戰場的第一道烽火</b>\n\n 金融業是全國資安首當其衝的攻擊熱點，各單位的資安策略及措施，也非常適合各產業企業做為參考，有做為標竿的作用。本次探討的方向會針對「防禦機制的有效性評估」、「供應鏈安全」、「資安策略及預算投放」進行，以期透過這樣的討論讓聽眾知道金融機構資安的超前部署，增加民眾對資安的信心，也做為其他業者的表率。",
-        "photo_link": "https://i.imgur.com/WmTrCaK.png",
-        "time_slot": "A",
-        "links": {
-          "Slido": "https://app.sli.do/event/ycm3yt5t",
-          "議程共筆": "https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ"
+  "times": {
+    "day1": {
+      "photo": "https://i.imgur.com/AD3MbBi.jpeg",
+      "slots": [
+        {
+          "A": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "11:00",
+            "end": "11:50"
+          }
+        },
+        {
+          "B": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "13:00",
+            "end": "13:50"
+          }
+        },
+        {
+          "C": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "14:00",
+            "end": "14:50"
+          }
+        },
+        {
+          "D": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "15:30",
+            "end": "16:20"
+          }
+        },
+        {
+          "E": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "16:30",
+            "end": "17:20"
+          }
         }
-      }
-    ],
-    "2": [
-      {
-        "topic": "R2 Breaking Samsung's Root of Trust: Exploiting Samsung S10 Secure Boot",
-        "description": "Being the highest market share smartphone manufacturer, Samsung conducts a series of protection on Android called Knox Platform to ensure the security of its smartphones. During the booting process, Samsung uses S-boot (Secure Boot) to make sure it can only boot a stocked image...(truncated)",
-        "photo_link": "https://i.imgur.com/WmTrCaK.png",
-        "time_slot": "A",
-        "links": {
-          "Slido": "https://app.sli.do/event/ycm3yt5t",
-          "議程共筆": "https://hackmd.io/FHbMehMSTsSq0aulU7GlKQ"
+      ]
+    },
+    "day2": {
+      "photo": "https://i.imgur.com/AD3MbBi.jpeg",
+      "slots": [
+        {
+          "A": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "09:20",
+            "end": "10:10"
+          }
+        },
+        {
+          "B": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "10:20",
+            "end": "11:10"
+          }
+        },
+        {
+          "C": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "11:20",
+            "end": "12:10"
+          }
+        },
+        {
+          "D": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "13:50",
+            "end": "14:40"
+          }
+        },
+        {
+          "E": {
+            "photo": "https://i.imgur.com/Jvh1OQm.jpeg",
+            "start": "14:50",
+            "end": "15:40"
+          }
         }
-      }
-    ]
+      ]
+    }
   }
 }
