@@ -1,10 +1,10 @@
 import logging
 import os
 
+from bot.functions import add_whitelist, get_whitelist
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from bot.functions import add_whitelist, get_whitelist
 from .help import help
 
 log: logging.Logger = logging.getLogger(__name__)

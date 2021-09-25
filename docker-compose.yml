@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  bot:
+    build:
+      context: ./app
+    networks:
+      - app
+    volumes:
+      - ./app:/app
+
+networks:
+  app:

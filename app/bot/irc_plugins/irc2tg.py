@@ -3,7 +3,6 @@ import logging
 import os
 
 from irc3 import IrcBot, event
-
 from main import bot
 
 log: logging.Logger = logging.getLogger(__name__)

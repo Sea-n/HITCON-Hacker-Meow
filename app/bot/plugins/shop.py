@@ -26,7 +26,7 @@ async def shop(cli: Client, msg: Message) -> None:
                          "請告訴駭客喵喵你想逛哪個分類", reply_markup=reply_markup)
 
 
-@Client.on_callback_query(filters.regex('^shop'))
+@Client.on_callback_query(filters.regex('^shop'), group=1)
 async def shop_callback(cli: Client, callback: CallbackQuery) -> None:
     keyboard = [[
         InlineKeyboardButton("回 HITCON 商城", "shop")

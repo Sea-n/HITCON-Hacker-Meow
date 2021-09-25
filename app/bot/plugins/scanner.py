@@ -1,7 +1,7 @@
 import logging
+from typing import List
 from uuid import uuid4
 
-from typing import List
 from pyrogram import Client, filters, raw
 from pyrogram.raw.base import InputBotInlineResult
 from pyrogram.types import CallbackGame, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InlineQuery, Message

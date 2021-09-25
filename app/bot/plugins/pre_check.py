@@ -1,9 +1,8 @@
 import logging
 
+from bot.functions import get_whitelist
 from pyrogram import Client, filters
 from pyrogram.types import Message
-
-from bot.functions import get_whitelist
 
 log: logging.Logger = logging.getLogger(__name__)
 

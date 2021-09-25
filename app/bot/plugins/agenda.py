@@ -1,11 +1,10 @@
 import logging
 from typing import Optional
 
-from pyrogram import Client, filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
-
 from bot.functions import get_agenda_by_info, get_agendas_by_room, get_agendas_by_time, get_day_photo, get_day_slots, \
     get_room_name, get_room_photo, get_time_photo, get_time_str
+from pyrogram import Client, filters
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
 
 log: logging.Logger = logging.getLogger(__name__)
 
