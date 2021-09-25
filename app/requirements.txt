@@ -1,11 +1,16 @@
 ﻿async-lru==1.0.2
+certifi==2021.5.30
+charset-normalizer==2.0.6
 docopt==0.6.2
 greenlet==1.1.1
+idna==3.2
 irc3==1.1.7
 pyaes==1.6.1
 Pyrogram @ git+https://github.com/pyrogram/pyrogram.git@320696b4b23c688d0488a6dbd2b1c9ca32ba4517
 PySocks==1.7.1
 python-dotenv==0.17.1
+requests==2.26.0
 SQLAlchemy==1.4.25
 TgCrypto==1.2.2
+urllib3==1.26.7
 venusian==3.0.0
