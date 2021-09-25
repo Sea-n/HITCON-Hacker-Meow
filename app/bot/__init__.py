@@ -9,6 +9,7 @@ from datetime import datetime
 from signal import SIGABRT, SIGINT, SIGTERM
 from typing import Any, Optional, Union
 
+import sqlalchemy
 from irc3 import IrcBot
 from pyrogram import Client
 from pyrogram.errors import ApiIdInvalid, AuthKeyUnregistered
@@ -24,6 +25,12 @@ class Bot:
     app_version: str = os.getenv("VERSION")
     device_model: str = f"PC {platform.architecture()[0]}"
     system_version: str = f"{platform.system()} {platform.python_implementation()} {platform.python_version()}"
+
+    from models import db, Database
+    db: Database = db
+
+    if not sqlalchemy.inspect(db.engine).has_table('users'):
+        db.init()
 
     def __init__(self):
         self.app: Client = Client(

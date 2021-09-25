@@ -1,3 +1,4 @@
 users.json
+jwt.sqlite
 *.session
 *.session-journal
