@@ -16,27 +16,35 @@ async def shop(cli: Client, msg: Message) -> None:
     user_orm: User = session.query(User).filter_by(uid=msg.from_user.id).first()
 
     if user_orm:
-        api_url: str = os.getenv("BASE_URL") + "api/v1/users/me"
+        info_url: str = os.getenv("BASE_URL") + "api/v1/users/me"
+        item_url: str = os.getenv("BASE_URL") + "api/v1/products/"
         headers = {"Authorization": f"Bearer {user_orm.jwt_token}"}
 
-        response = requests.get(api_url, headers=headers)
+        info_response = requests.get(info_url, headers=headers)
+        item_response = requests.get(item_url, headers=headers)
 
-        keyboard = [[
-            InlineKeyboardButton("T-Shirt", "shop_shirt"),
-            InlineKeyboardButton("電路板", "shop_board"),
-        ], [
-            InlineKeyboardButton("背包", "shop_pack"),
-            InlineKeyboardButton("紀念小物", "shop_others"),
-            InlineKeyboardButton("限定推薦", "shop_recommended"),
-        ], [
+        keyboard: list[list[InlineKeyboardButton]] = []
+        kb: list[InlineKeyboardButton] = []
+        item_count: int = 0
+
+        for item in item_response.json():
+            item_count += 1
+            if item_count == 4:
+                item_count = 0
+                keyboard.append(kb)
+                kb = []
+
+            kb.append(InlineKeyboardButton(item.get("name"), f"shop_{item.get('id')}"))
+
+        keyboard.append([
             InlineKeyboardButton("回主選單", "help"),
-        ]]
+        ])
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         await cli.send_photo(msg.chat.id, "https://i.imgur.com/054ENew.png",
                              f"歡迎來到 **HITCON 線上商城**\n\n"
-                             f"你有 `{response.json().get('points')}` 點\n\n"
-                             f"請告訴駭客喵喵你想逛哪個分類", reply_markup=reply_markup)
+                             f"你有 `{info_response.json().get('points')}` 點\n\n"
+                             f"請告訴駭客喵喵你想查看哪個物品", reply_markup=reply_markup)
     else:
         keyboard = [[
             InlineKeyboardButton("回主選單", "help"),
@@ -53,22 +61,46 @@ async def shop_callback(cli: Client, callback: CallbackQuery) -> None:
     ]]
 
     if callback.data == "shop":
-        keyboard = [[
-            InlineKeyboardButton("T-Shirt", "shop_shirt"),
-            InlineKeyboardButton("電路板", "shop_board"),
-        ], [
-            InlineKeyboardButton("背包", "shop_pack"),
-            InlineKeyboardButton("紀念小物", "shop_others"),
-            InlineKeyboardButton("限定推薦", "shop_recommended"),
-        ], [
-            InlineKeyboardButton("回主選單", "help"),
-        ]]
+        session = db.session()
+        user_orm: User = session.query(User).filter_by(uid=callback.from_user.id).first()
 
-        media = InputMediaPhoto("https://i.imgur.com/054ENew.png",
-                                "歡迎來到 *HITCON 線上商城*\n\n"
-                                "使用者：*Hacker Meow* (金級贊助商)\n"
-                                "點數：*4,200 點*\n\n"
-                                "請告訴駭客喵喵你想逛哪個分類")
+        if user_orm:
+            info_url: str = os.getenv("BASE_URL") + "api/v1/users/me"
+            item_url: str = os.getenv("BASE_URL") + "api/v1/products/"
+            headers = {"Authorization": f"Bearer {user_orm.jwt_token}"}
+
+            info_response = requests.get(info_url, headers=headers)
+            item_response = requests.get(item_url, headers=headers)
+
+            keyboard: list[list[InlineKeyboardButton]] = []
+            kb: list[InlineKeyboardButton] = []
+            item_count: int = 0
+
+            for item in item_response.json():
+                item_count += 1
+                if item_count == 4:
+                    item_count = 0
+                    keyboard.append(kb)
+                    kb = []
+
+                kb.append(InlineKeyboardButton(item.get("name"), f"shop_{item.get('id')}"))
+
+            keyboard.append([
+                InlineKeyboardButton("回主選單", "help"),
+            ])
+
+            media = InputMediaPhoto("https://i.imgur.com/054ENew.png",
+                                    f"歡迎來到 **HITCON 線上商城**\n\n"
+                                    f"你有 `{info_response.json().get('points')}` 點\n\n"
+                                    f"請告訴駭客喵喵你想查看哪個物品")
+        else:
+            keyboard = [[
+                InlineKeyboardButton("回主選單", "help"),
+            ]]
+
+            media = InputMediaPhoto("https://i.imgur.com/054ENew.png",
+                                    "請先進行綁定再進行後續動作")
+
 
     elif callback.data == "shop_shirt":
         # TODO: iter item from API 3.14
