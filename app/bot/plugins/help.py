@@ -9,13 +9,7 @@ log: logging.Logger = logging.getLogger(__name__)
 @Client.on_message(filters.command("help") & ~ filters.forwarded)
 async def help(cli: Client, msg: Message) -> None:
     keyboard = [[
-        InlineKeyboardButton("議程資訊", "agenda"),
         InlineKeyboardButton("精彩活動", "events"),
-    ], [
-        InlineKeyboardButton("交通方式", "traffic"),
-        InlineKeyboardButton("場地平面圖", "plan"),
-    ], [
-        InlineKeyboardButton("HITCON 商城", "shop"),
     ], [
         InlineKeyboardButton("HITCON 公告頻道", url="https://t.me/H17C0N"),
         InlineKeyboardButton("HITCON 聊天群組", url="https://t.me/HacksInTaiwan"),
@@ -31,13 +25,7 @@ async def help(cli: Client, msg: Message) -> None:
 async def help_callback(cli: Client, callback: CallbackQuery) -> None:
     if callback.data == "help":
         keyboard = [[
-            InlineKeyboardButton("議程資訊", "agenda"),
             InlineKeyboardButton("精彩活動", "events"),
-        ], [
-            InlineKeyboardButton("交通方式", "traffic"),
-            InlineKeyboardButton("場地平面圖", "plan"),
-        ], [
-            InlineKeyboardButton("HITCON 商城", "shop"),
         ], [
             InlineKeyboardButton("HITCON 公告頻道", url="https://t.me/H17C0N"),
             InlineKeyboardButton("HITCON 聊天群組", url="https://t.me/HacksInTaiwan"),
