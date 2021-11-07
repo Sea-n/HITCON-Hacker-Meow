@@ -9,14 +9,35 @@ from datetime import datetime
 from signal import SIGABRT, SIGINT, SIGTERM
 from typing import Any, Optional, Union
 
+import requests
 import sqlalchemy
 from irc3 import IrcBot
+from jieba.analyse import ChineseAnalyzer
 from pyrogram import Client
 from pyrogram.errors import ApiIdInvalid, AuthKeyUnregistered
 from pyrogram.session import Session
-from pyrogram.types import User
+from pyrogram.types import CallbackQuery, Message, User
+from whoosh.collectors import FilterCollector
+from whoosh.fields import ID, Schema, TEXT
+from whoosh.index import create_in
+from whoosh.qparser import MultifieldParser
+
+from models import Audit
 
 log: logging.Logger = logging.getLogger(__name__)
+SESSION_JSON: str = "https://hitcon.org/2021/speaker/session.json"
+
+schema: Schema = Schema(
+    id=ID(stored=True),
+    type=ID(stored=True),
+    room=ID(stored=True),
+    start=ID(stored=True),
+    end=ID(stored=True),
+    qa=ID(stored=True),
+    slide=ID(stored=True),
+    title=TEXT(stored=True, analyzer=ChineseAnalyzer()),
+    content=TEXT(stored=True, analyzer=ChineseAnalyzer())
+)
 
 
 class Bot:
@@ -57,6 +78,34 @@ class Bot:
         ))
 
         self.start_time: datetime = datetime.utcnow()
+
+        _r: requests = requests.get(SESSION_JSON)
+        if _r.status_code != 200:
+            raise ConnectionError("Can not get the session json, is the bot in offline mode?")
+        _data: dict = _r.json()
+
+        _index_dir: str = "_index_"
+        if not os.path.exists(_index_dir):
+            os.mkdir(_index_dir)
+        _ix = create_in(_index_dir, schema)
+
+        _writer = _ix.writer()
+        for _ in _data["sessions"]:
+            _writer.add_document(
+                id=_["id"],
+                type=_["type"],
+                room=_["room"],
+                start=_["start"],
+                end=_["end"],
+                qa=_["qa"],
+                slide=_["slide"],
+                title=_["zh"]["title"],
+                content=_["zh"]["description"]
+            )
+        _writer.commit()
+
+        self._searcher = _ix.searcher()
+        self._parser = MultifieldParser(["title", "content"], schema=schema)
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -122,6 +171,22 @@ class Bot:
         log.debug("[TG] Bot stopped")
         self.irc.quit("Client stop successfully")
         log.debug("[IRC] Bot stopped")
+
+    def search(self, target: str) -> FilterCollector:
+        """Search session title and description if match the target."""
+        return self._searcher.search(self._parser.parse(target))
+
+    def audit(self, action: Union[Message, CallbackQuery]) -> None:
+        """Audit user incoming actions. For server log usage."""
+        log.debug(action)
+
+        audit: Audit = Audit()
+        audit.uid = action.from_user.id
+        audit.item = action.__str__()
+
+        with self.db.session() as session:
+            session.add(audit)
+            session.commit()
 
     async def run_once(self):
         # Disable notice

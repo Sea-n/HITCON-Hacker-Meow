@@ -1,4 +1,6 @@
+_index_/
+
 users.json
-jwt.sqlite
+data.sqlite
 *.session
 *.session-journal
