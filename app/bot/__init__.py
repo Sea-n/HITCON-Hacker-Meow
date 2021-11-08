@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import platform
+import random
 import sys
 import time
 from asyncio import AbstractEventLoop
@@ -17,15 +18,16 @@ from pyrogram import Client
 from pyrogram.errors import ApiIdInvalid, AuthKeyUnregistered
 from pyrogram.session import Session
 from pyrogram.types import CallbackQuery, Message, User
-from whoosh.collectors import FilterCollector
 from whoosh.fields import ID, Schema, TEXT
 from whoosh.index import create_in
 from whoosh.qparser import MultifieldParser
+from whoosh.searching import Results
 
 from models import Audit
 
 log: logging.Logger = logging.getLogger(__name__)
 SESSION_JSON: str = "https://hitcon.org/2021/speaker/session.json"
+CONTENT_URL: str = "https://raw.githubusercontent.com/Sea-n/HITCON-Hacker-Meow/master/app/content.txt"
 
 schema: Schema = Schema(
     id=ID(stored=True),
@@ -78,18 +80,20 @@ class Bot:
         ))
 
         self.start_time: datetime = datetime.utcnow()
+        self.reply_list: list = list()
+
+        # init writers
+        _index_dir: str = "_index_"
+        if not os.path.exists(_index_dir):
+            os.mkdir(_index_dir)
+        self.ix = create_in(_index_dir, schema)
 
         _r: requests = requests.get(SESSION_JSON)
         if _r.status_code != 200:
             raise ConnectionError("Can not get the session json, is the bot in offline mode?")
         _data: dict = _r.json()
 
-        _index_dir: str = "_index_"
-        if not os.path.exists(_index_dir):
-            os.mkdir(_index_dir)
-        _ix = create_in(_index_dir, schema)
-
-        _writer = _ix.writer()
+        _writer = self.ix.writer()
         for _ in _data["sessions"]:
             _writer.add_document(
                 id=_["id"],
@@ -103,9 +107,6 @@ class Bot:
                 content=_["zh"]["description"]
             )
         _writer.commit()
-
-        self._searcher = _ix.searcher()
-        self._parser = MultifieldParser(["title", "content"], schema=schema)
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -172,9 +173,11 @@ class Bot:
         self.irc.quit("Client stop successfully")
         log.debug("[IRC] Bot stopped")
 
-    def search(self, target: str) -> FilterCollector:
+    def search(self, target: str) -> Results:
         """Search session title and description if match the target."""
-        return self._searcher.search(self._parser.parse(target))
+        searcher = self.ix.searcher()
+        parser = MultifieldParser(["title", "content"], schema=schema)
+        return searcher.search(parser.parse(target))
 
     def audit(self, action: Union[Message, CallbackQuery]) -> None:
         """Audit user incoming actions. For server log usage."""
@@ -187,6 +190,21 @@ class Bot:
         with self.db.session() as session:
             session.add(audit)
             session.commit()
+
+    def update_random_reply_list(self) -> None:
+        _r: requests = requests.get(CONTENT_URL)
+        if _r.status_code != 200:
+            raise ConnectionError("Can not get the content, is the bot in offline mode?")
+
+        for w in _r.text.split(",\n"):
+            if w:
+                self.reply_list.append(w)
+
+    def random_reply(self) -> str:
+        if not self.reply_list:
+            self.update_random_reply_list()
+        random_str: str = random.choice(self.reply_list)
+        return random_str
 
     async def run_once(self):
         # Disable notice
