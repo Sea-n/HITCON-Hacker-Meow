@@ -1,7 +1,7 @@
 import logging
 
 from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from whoosh.searching import Results
 
 from bot.functions import get_whitelist
@@ -19,16 +19,23 @@ async def pre_check(_: Client, msg: Message) -> None:
             # 指令交由後面處理
             return
 
-        results: Results = bot.search(msg.text)
+        results: Results = bot.search_keyword(msg.text)
 
         if len(results) > 0:
             s: str = f"駭客喵喵找到了 {len(results)} 個你可能在找的議程\n"
 
-            for index, r in enumerate(results):
-                # TODO: 改寫成按鈕形式，點擊後可帶出議程基本資訊
-                s += f"第 {index + 1} 個標題為：\n<code>{r['title']}</code>\n"
+            keyboard: list[list[InlineKeyboardButton]] = [[]]
 
-            await msg.reply(s)
+            for index, r in enumerate(results):
+                keyboard[index].append(
+                    InlineKeyboardButton(
+                        r["title"], r["id"]
+                    )
+                )
+                keyboard.append([])
+
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            await msg.reply(s, reply_markup=reply_markup)
 
         else:
             await msg.reply(bot.random_reply())
