@@ -17,13 +17,12 @@ from pyrogram.session import Session
 from pyrogram.types import CallbackQuery, Message, User
 
 from bot.random_reply import RandomReply
-from bot.session import Session
 from models import Audit
 
 log: logging.Logger = logging.getLogger(__name__)
 
 
-class Bot(Session, RandomReply):
+class Bot(RandomReply):
     _instance: Union[None, "Bot"] = None
     me: Optional[User] = None
     app_version: str = os.getenv("VERSION")

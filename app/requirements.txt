@@ -15,4 +15,3 @@ SQLAlchemy==1.4.26
 TgCrypto==1.2.2
 urllib3==1.26.7
 venusian==3.0.0
-Whoosh==2.7.4
