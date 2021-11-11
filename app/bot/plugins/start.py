@@ -4,7 +4,8 @@ import os
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from bot.functions import add_whitelist, get_whitelist
+from bot.magic_methods import add_whitelist, get_whitelist
+from main import bot
 from .help import help
 
 log: logging.Logger = logging.getLogger(__name__)
@@ -18,6 +19,10 @@ async def start(cli: Client, msg: Message) -> None:
         if token == os.getenv("VERIFY"):
             add_whitelist(msg.from_user.id)
             await msg.reply("歡迎使用！")
+
+        elif token.isdigit():
+            await msg.reply(bot.get_question(token))
+
         else:
             await msg.reply("通關密語錯誤！")
 

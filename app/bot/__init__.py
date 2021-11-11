@@ -16,13 +16,13 @@ from pyrogram.errors import ApiIdInvalid, AuthKeyUnregistered
 from pyrogram.session import Session
 from pyrogram.types import CallbackQuery, Message, User
 
-from bot.random_reply import RandomReply
+from bot.playground import Playground
 from models import Audit
 
 log: logging.Logger = logging.getLogger(__name__)
 
 
-class Bot(RandomReply):
+class Bot(Playground):
     _instance: Union[None, "Bot"] = None
     me: Optional[User] = None
     app_version: str = os.getenv("VERSION")

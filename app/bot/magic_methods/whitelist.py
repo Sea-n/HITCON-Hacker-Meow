@@ -4,7 +4,7 @@ import os
 from typing import List
 
 log: logging.Logger = logging.getLogger(__name__)
-
+# TODO: remove this file
 FILE_PATH: str = os.getcwd() + "/users.json"
 
 

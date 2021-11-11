@@ -13,4 +13,4 @@ class User(db.base):
     db_answered = relationship("Answered", backref="user")
 
     def __repr__(self):
-        return f"<User(uid={self.uid}, Points={self.points})>"
+        return f"<User(uid={self.uid}, points={self.points})>"
