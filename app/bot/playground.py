@@ -49,7 +49,6 @@ class Playground(MagicMethods):
         if self.__is_question_exist(qid):
             with db.session() as session:
                 q: Question = session.query(Question).filter_by(qid=qid).first()
-                self.init_user(uid)
 
                 if self.__is_user_answered(uid, qid):
                     s: str = "你已經完成題目了喔owo\n"
@@ -78,7 +77,7 @@ class Playground(MagicMethods):
 
     @staticmethod
     def init_user(uid: int) -> None:
-        """Get user."""
+        """Init user data in db."""
         with db.session() as session:
             user: User = session.query(User).filter_by(uid=uid).first()
 

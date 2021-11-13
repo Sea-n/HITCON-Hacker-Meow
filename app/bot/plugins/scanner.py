@@ -9,7 +9,7 @@ from pyrogram.types import CallbackGame, CallbackQuery, InlineKeyboardButton, In
 log: logging.Logger = logging.getLogger(__name__)
 GAME_SHORT_NAME: str = "QR_code"
 
-
+# TODO: remove scanner, not support camera permission
 @Client.on_inline_query()
 async def inline_query(cli: Client, inline: InlineQuery) -> None:
     game_keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup([
