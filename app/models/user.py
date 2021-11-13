@@ -10,7 +10,11 @@ class User(db.base):
     uid = Column(BigInteger, primary_key=True)
     points = Column(Integer)
 
-    db_answered = relationship("Answered", backref="user")
+    answered = relationship("Answered", backref="user")
+
+    def __init__(self, uid: int):
+        self.uid = uid
+        self.points = 0
 
     def __repr__(self):
         return f"<User(uid={self.uid}, points={self.points})>"

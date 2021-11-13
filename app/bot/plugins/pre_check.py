@@ -19,7 +19,7 @@ async def pre_check(_: Client, msg: Message) -> None:
             return
 
         if len(msg.text) == 4 and msg.text.isdigit():
-            await msg.reply(bot.get_question(msg.text))
+            await msg.reply(bot.get_question_topic(msg.text))
             return
 
         try_text: list[str] = msg.text.split("_", maxsplit=1)

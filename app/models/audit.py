@@ -12,4 +12,4 @@ class Audit(db.base):
     item = Column(JSON, nullable=False)
 
     def __repr__(self):
-        return f"<User(uid={self.uid}, item={self.item})>"
+        return f"<Log(uid={self.uid}, item={self.item})>"

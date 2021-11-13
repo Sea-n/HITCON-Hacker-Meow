@@ -16,7 +16,7 @@ class Answered(db.base):
     def __init__(self, uid: int, qid: str):
         self.uid = uid
         self.qid = qid
-        self.retry_times = 1
+        self.retry_times = 0
         self.is_passed = False
 
     def __repr__(self):
