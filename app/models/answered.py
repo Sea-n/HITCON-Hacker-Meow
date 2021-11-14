@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, Integer
+from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, Integer, Text
 
 from .database import db
 
@@ -11,7 +11,7 @@ class Answered(db.base):
     is_passed = Column(Boolean, default=False)
 
     uid = Column(BigInteger, ForeignKey('users.uid'), nullable=False)
-    qid = Column(BigInteger, ForeignKey('questions.qid'), nullable=False)
+    qid = Column(Text, ForeignKey('questions.qid'), nullable=False)
 
     def __init__(self, uid: int, qid: str):
         self.uid = uid

@@ -19,13 +19,13 @@ async def pre_message(_: Client, msg: Message) -> None:
             # 指令交由後面處理
             return
 
-        if len(msg.text) == 4 and msg.text.isdigit():
+        if len(msg.text) == 4:
             await msg.reply(bot.get_question_topic(msg.text))
             return
 
         try_text: list[str] = msg.text.split("_", maxsplit=1)
 
-        if len(try_text) == 2 and try_text[0].isdigit():
+        if len(try_text) == 2 and len(try_text[0]) == 4:
             await msg.reply(bot.answer_question(msg.from_user.id, try_text[0], try_text[1]))
             return
 

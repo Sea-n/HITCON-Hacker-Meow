@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, Integer, String
+from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .database import db
@@ -7,7 +7,7 @@ from .database import db
 class Question(db.base):
     __tablename__ = 'questions'
 
-    qid = Column(BigInteger, primary_key=True)
+    qid = Column(Text, primary_key=True)
     level = Column(String, nullable=False)
     topic = Column(String, nullable=False)
     answer = Column(String, nullable=False)

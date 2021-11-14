@@ -20,7 +20,7 @@ async def start(cli: Client, msg: Message) -> None:
             add_whitelist(msg.from_user.id)
             await msg.reply("歡迎使用！")
 
-        elif token.isdigit():  # TODO: 0 開頭字串檢查
+        elif len(token) == 4:  # TODO: 0 開頭字串檢查
             await msg.reply(bot.get_question_topic(token))
 
         else:

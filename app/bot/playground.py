@@ -74,6 +74,7 @@ class Playground(MagicMethods):
                 else:
                     s: str = "你答錯了"
                 return s
+        return self.random_reply()
 
     @staticmethod
     def init_user(uid: int) -> None:
