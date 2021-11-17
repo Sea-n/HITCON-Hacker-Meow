@@ -70,7 +70,8 @@ class Playground(MagicMethods):
                 session.commit()
 
                 if a.is_passed:
-                    s: str = f"恭喜你答對了，你花了 {a.retry_times} 次答對。"
+                    s: str = f"恭喜你答對了，你花了 {a.retry_times} 次答對。\n" \
+                             f"Response: {q.response}"
                 else:
                     s: str = "你答錯了"
                 return s

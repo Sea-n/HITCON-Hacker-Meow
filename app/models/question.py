@@ -11,6 +11,7 @@ class Question(db.base):
     level = Column(String, nullable=False)
     topic = Column(String, nullable=False)
     answer = Column(String, nullable=False)
+    response = Column(String, nullable=True)
 
     points = Column(Integer, nullable=False)
 
