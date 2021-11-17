@@ -3,7 +3,7 @@ import logging
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from bot.magic_methods import get_whitelist
+from bot.plugins.commands import all_commands
 from main import bot
 
 log: logging.Logger = logging.getLogger(__name__)
@@ -16,8 +16,9 @@ async def pre_message(_: Client, msg: Message) -> None:
 
     if msg.text:
         if msg.text.startswith("/"):
-            # 指令交由後面處理
-            return
+            """指令交由後面處理"""
+            if msg.text.split("/", maxsplit=2)[1] in all_commands:
+                return
 
         if len(msg.text) == 4:
             await msg.reply(bot.get_question_topic(msg.text))
@@ -31,8 +32,4 @@ async def pre_message(_: Client, msg: Message) -> None:
 
         await msg.reply(bot.random_reply())
 
-        msg.stop_propagation()
-
-    if msg.from_user.id not in get_whitelist():
-        await msg.reply("駭客喵喵還不認識你喔，請跟我講通關密語或等到公開測試")
         msg.stop_propagation()

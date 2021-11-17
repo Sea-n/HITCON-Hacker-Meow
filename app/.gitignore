@@ -1,6 +1,5 @@
 _index_/
 
-users.json
 data.sqlite
 *.session
 *.session-journal
