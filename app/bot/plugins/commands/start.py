@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -15,8 +16,13 @@ async def start(cli: Client, msg: Message) -> None:
         token: str = msg.command[1]
 
         if len(token) == 4:
-            await msg.reply(bot.get_question_topic(token))
+            topic: Optional[str] = bot.get_question_topic(token)
 
+            if topic:
+                await msg.reply(topic)
+                return
+
+        await bot.random_reply(msg)
         return
 
     await help(cli, msg)

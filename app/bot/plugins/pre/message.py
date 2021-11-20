@@ -17,12 +17,18 @@ async def pre_message(_: Client, msg: Message) -> None:
     if msg.text:
         if msg.text.startswith("/"):
             """指令交由後面處理"""
-            if msg.text.split("/", maxsplit=2)[1] in all_commands:
+            if msg.text.split("/", maxsplit=2)[1].split(" ")[0] in all_commands:
                 return
 
-        if len(msg.text) == 4:
-            await msg.reply(bot.get_question_topic(msg.text))
+        if bot.is_situation_exist(msg.text):
+            await bot.situation_reply(msg)
             return
+
+        if len(msg.text) == 4:
+            topic: str = bot.get_question_topic(msg.text)
+            if topic:
+                await msg.reply(topic)
+                return
 
         try_text: list[str] = msg.text.split("_", maxsplit=1)
 
@@ -30,6 +36,6 @@ async def pre_message(_: Client, msg: Message) -> None:
             await msg.reply(bot.answer_question(msg.from_user.id, try_text[0], try_text[1]))
             return
 
-        await msg.reply(bot.random_reply())
+        await bot.random_reply(msg)
 
         msg.stop_propagation()

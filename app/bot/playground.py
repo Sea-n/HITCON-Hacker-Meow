@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from bot.magic_methods import MagicMethods
 from models import Answered, Question, User, db
@@ -34,7 +35,7 @@ class Playground(MagicMethods):
                 return True
             return False
 
-    def get_question_topic(self, qid: str) -> str:
+    def get_question_topic(self, qid: str) -> Optional[str]:
         """Get question topic by question id."""
         if self.__is_question_exist(qid):
             with db.session() as session:
@@ -42,9 +43,9 @@ class Playground(MagicMethods):
                 # 可以構造題目字串在此
                 return q.topic
         else:
-            return self.random_reply()
+            return None
 
-    def answer_question(self, uid: int, qid: str, answer: str) -> str:
+    def answer_question(self, uid: int, qid: str, answer: str) -> Optional[str]:
         """Try to answer a question by question id and answer."""
         if self.__is_question_exist(qid):
             with db.session() as session:
@@ -75,7 +76,7 @@ class Playground(MagicMethods):
                 else:
                     s: str = "你答錯了"
                 return s
-        return self.random_reply()
+        return None
 
     @staticmethod
     def init_user(uid: int) -> None:
