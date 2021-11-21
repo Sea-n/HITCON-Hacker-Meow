@@ -11,6 +11,8 @@ pic_url = "https://i.imgur.com/Un9ZopT.png"
 @Client.on_message(filters.command("help") & filters.private & ~ filters.forwarded)
 async def help(cli: Client, msg: Message) -> None:
     keyboard = [[
+        InlineKeyboardButton("遊玩方式", "game"),
+    ], [
         InlineKeyboardButton("HITCON 公告頻道", url="https://t.me/H17C0N"),
         InlineKeyboardButton("HITCON 聊天群組", url="https://t.me/HacksInTaiwan"),
     ]]
