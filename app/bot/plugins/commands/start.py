@@ -16,7 +16,7 @@ async def start(cli: Client, msg: Message) -> None:
         token: str = msg.command[1]
 
         if len(token) == 4:
-            topic: Optional[str] = bot.get_question_topic(token)
+            topic: Optional[str] = bot.get_question_topic(token.upper())
 
             if topic:
                 await msg.reply(topic)

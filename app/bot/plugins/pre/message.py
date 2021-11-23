@@ -25,7 +25,7 @@ async def pre_message(_: Client, msg: Message) -> None:
             return
 
         if len(msg.text) == 4:
-            topic: str = bot.get_question_topic(msg.text)
+            topic: str = bot.get_question_topic(msg.text.upper())
             if topic:
                 await msg.reply(topic)
                 return
