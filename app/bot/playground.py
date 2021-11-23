@@ -1,3 +1,4 @@
+import html
 import logging
 from typing import Optional
 
@@ -41,7 +42,11 @@ class Playground(MagicMethods):
             with db.session() as session:
                 q: Question = session.query(Question).filter_by(qid=qid).first()
                 # 可以構造題目字串在此
-                return q.topic
+                ret: str = q.topic
+                ret = ret.replace("<code>", "👌").replace("</code>", "👍")
+                ret = html.escape(ret)
+                ret = ret.replace("👍", "</code>").replace("👌", "<code>")
+                return ret
         else:
             return None
 
