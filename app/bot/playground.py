@@ -70,11 +70,22 @@ class Playground(MagicMethods):
                 session.add(a)
                 session.commit()
 
+                user: User = session.query(User).filter_by(uid=uid).first()
+                score: str = user.points
+                correct_answer_count: str = str(len([_ for _ in user.answered if _.is_passed]))
+
                 if a.is_passed:
-                    s: str = f"恭喜你答對了，你花了 {a.retry_times} 次答對。\n" \
-                             f"Response: {q.response}"
+                    s: str = f"{q.response}\n" \
+                             f"\n" \
+                             f"已獲得積分：**{score}** 分\n" \
+                             f"已解完題目：**{correct_answer_count}** 題"
                 else:
-                    s: str = "你答錯了"
+                    s: str = f"哎呀，看起來答案錯誤，再嘗試看看吧！\n" \
+                             f"若有任何問題，可以到大會活動組詢問哦！\n" \
+                             f"\n" \
+                             f"已獲得積分：**{score}** 分\n" \
+                             f"已解完題目：**{correct_answer_count}** "
+
                 return s
         return None
 
