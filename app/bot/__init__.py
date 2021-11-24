@@ -81,7 +81,7 @@ class Bot(Playground):
         }
         self.app.start()
         log.debug("[TG] Bot started")
-        # self.irc.run(False)
+        self.irc.run(False)
         log.debug("[IRC] Bot started")
 
         log.debug("Remove registered handlers and register new handlers")
