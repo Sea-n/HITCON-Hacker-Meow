@@ -68,7 +68,7 @@ class Playground(MagicMethods):
                 a: Answered = session.query(Answered).filter_by(qid=qid, uid=uid).first()
                 a.retry_times += 1
 
-                if q.answer == answer:
+                if q.answer.lower() == answer.lower():
                     a.is_passed = True
                     self.add_user_points(uid, q.points)
 

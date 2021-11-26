@@ -33,7 +33,7 @@ async def pre_message(_: Client, msg: Message) -> None:
         try_text: list[str] = msg.text.split("_", maxsplit=1)
 
         if len(try_text) == 2 and len(try_text[0]) == 4:
-            await msg.reply(bot.answer_question(msg.from_user.id, try_text[0], try_text[1]))
+            await msg.reply(bot.answer_question(msg.from_user.id, try_text[0].upper(), try_text[1]))
             return
 
         await bot.random_reply(msg)
