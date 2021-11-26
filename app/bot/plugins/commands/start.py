@@ -22,11 +22,4 @@ async def start(cli: Client, msg: Message) -> None:
                 await msg.reply(topic)
                 return
 
-        elif len(token) == 41:
-            await help(cli, msg)
-            return
-
-        await bot.random_reply(msg)
-        return
-
     await help(cli, msg)
