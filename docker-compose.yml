@@ -6,6 +6,7 @@ services:
       context: ./app
     networks:
       - app
+    restart: always
     volumes:
       - ./app:/app
 
