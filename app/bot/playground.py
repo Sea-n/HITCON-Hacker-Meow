@@ -52,47 +52,48 @@ class Playground(MagicMethods):
 
     def answer_question(self, uid: int, qid: str, answer: str) -> Optional[str]:
         """Try to answer a question by question id and answer."""
-        if self.__is_question_exist(qid):
-            with db.session() as session:
-                q: Question = session.query(Question).filter_by(qid=qid).first()
+        if not self.__is_question_exist(qid):
+            return "題號不存在哦！"
 
-                if self.__is_user_answered(uid, qid):
-                    s: str = "你已經完成題目了喔owo\n"
+        with db.session() as session:
+            q: Question = session.query(Question).filter_by(qid=qid).first()
 
-                    s += "恭喜你答對了，但是你已經答對過了，所以沒有分數喔" \
-                        if q.answer == answer else \
-                        "咦，你不是答對過了嗎"
+            if self.__is_user_answered(uid, qid):
+                s: str = "你已經完成題目了喔owo\n"
 
-                    return s
-
-                a: Answered = session.query(Answered).filter_by(qid=qid, uid=uid).first()
-                a.retry_times += 1
-
-                if q.answer.lower() == answer.lower():
-                    a.is_passed = True
-                    self.add_user_points(uid, q.points)
-
-                session.add(a)
-                session.commit()
-
-                user: User = session.query(User).filter_by(uid=uid).first()
-                score: str = user.points
-                correct_answer_count: str = str(len([_ for _ in user.answered if _.is_passed]))
-
-                if a.is_passed:
-                    s: str = f"{q.response}\n" \
-                             f"\n" \
-                             f"已獲得積分：**{score}** 分\n" \
-                             f"已解完題目：**{correct_answer_count}** 題"
-                else:
-                    s: str = f"哎呀，看起來答案錯誤，再嘗試看看吧！\n" \
-                             f"若有任何問題，可以到大會活動組詢問哦！\n" \
-                             f"\n" \
-                             f"已獲得積分：**{score}** 分\n" \
-                             f"已解完題目：**{correct_answer_count}** "
+                s += "恭喜你答對了，但是你已經答對過了，所以沒有分數喔" \
+                    if q.answer == answer else \
+                    "咦，你不是答對過了嗎"
 
                 return s
-        return None
+
+            a: Answered = session.query(Answered).filter_by(qid=qid, uid=uid).first()
+            a.retry_times += 1
+
+            if q.answer.lower() == answer.lower():
+                a.is_passed = True
+                self.add_user_points(uid, q.points)
+
+            session.add(a)
+            session.commit()
+
+            user: User = session.query(User).filter_by(uid=uid).first()
+            score: str = user.points
+            correct_answer_count: str = str(len([_ for _ in user.answered if _.is_passed]))
+
+            if a.is_passed:
+                s: str = f"{q.response}\n" \
+                         f"\n" \
+                         f"已獲得積分：**{score}** 分\n" \
+                         f"已解完題目：**{correct_answer_count}** 題"
+            else:
+                s: str = f"哎呀，看起來答案錯誤，再嘗試看看吧！\n" \
+                         f"若有任何問題，可以到大會活動組詢問哦！\n" \
+                         f"\n" \
+                         f"已獲得積分：**{score}** 分\n" \
+                         f"已解完題目：**{correct_answer_count}** "
+
+            return s
 
     @staticmethod
     def init_user(uid: int) -> None:
