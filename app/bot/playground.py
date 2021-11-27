@@ -57,12 +57,13 @@ class Playground(MagicMethods):
 
         with db.session() as session:
             q: Question = session.query(Question).filter_by(qid=qid).first()
+            correct_ans: str = q.answer.lower()
 
             if self.__is_user_answered(uid, qid):
                 s: str = "你已經完成題目了喔owo\n"
 
                 s += "恭喜你答對了，但是你已經答對過了，所以沒有分數喔" \
-                    if q.answer == answer else \
+                    if correct_ans == answer else \
                     "咦，你不是答對過了嗎"
 
                 return s
@@ -70,7 +71,7 @@ class Playground(MagicMethods):
             a: Answered = session.query(Answered).filter_by(qid=qid, uid=uid).first()
             a.retry_times += 1
 
-            if q.answer.lower() == answer.lower():
+            if correct_ans == answer:
                 a.is_passed = True
                 self.add_user_points(uid, q.points)
 
